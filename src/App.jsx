@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Stats from "./components/Stats";
 import Testimonials from "./components/Testimonials";
-import Admin from "./components/Admin";
+import ProtectedAdmin from "./components/ProtectedAdmin";
 
 function Footer() {
   return (
@@ -28,9 +28,7 @@ export default function App() {
         <Hero />
         <Stats />
         <Testimonials />
-        <div id="admin">
-          <Admin />
-        </div>
+        <ProtectedAdmin />
       </main>
       <Footer />
     </div>
