@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Stats from "./components/Stats";
@@ -20,7 +21,7 @@ function Footer() {
   );
 }
 
-export default function App() {
+function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-blue-900">
       <Header />
@@ -28,9 +29,41 @@ export default function App() {
         <Hero />
         <Stats />
         <Testimonials />
-        <ProtectedAdmin />
       </main>
       <Footer />
     </div>
+  );
+}
+
+function AdminPage() {
+  return (
+    <div className="min-h-screen bg-white text-blue-900">
+      <ProtectedAdmin />
+    </div>
+  );
+}
+
+function NotFound() {
+  return (
+    <div className="min-h-screen grid place-items-center bg-white text-blue-900">
+      <div className="text-center px-6">
+        <h1 className="text-4xl font-semibold mb-2">Page not found</h1>
+        <p className="text-blue-900/70 mb-6">The page you’re looking for doesn’t exist.</p>
+        <a href="/" className="inline-block rounded-lg bg-blue-600 text-white px-4 py-2 font-medium hover:bg-blue-700">Go home</a>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
