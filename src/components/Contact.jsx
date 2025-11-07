@@ -5,16 +5,35 @@ export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState({ type: "idle", message: "" });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    // Demo submit: pretend to send and clear form
-    setSent(true);
-    setName("");
-    setEmail("");
-    setMessage("");
-    setTimeout(() => setSent(false), 3000);
+    setStatus({ type: "loading", message: "Sending..." });
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data?.detail || "Failed to send message");
+      }
+
+      setStatus({ type: "success", message: "Thanks! Your message has been sent." });
+      setName("");
+      setEmail("");
+      setMessage("");
+
+    } catch (err) {
+      setStatus({ type: "error", message: err?.message || "Something went wrong. Please try again." });
+    } finally {
+      setTimeout(() => setStatus({ type: "idle", message: "" }), 5000);
+    }
   };
 
   return (
@@ -68,17 +87,23 @@ export default function Contact() {
               />
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-sm text-blue-900/60">Prefer email? hello@fastdevp.dev</p>
+              <p className="text-sm text-blue-900/60">Prefer email? kevinsuyadi2017@gmail.com</p>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white hover:bg-blue-700 transition"
+                disabled={status.type === "loading"}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white hover:bg-blue-700 transition disabled:opacity-60"
               >
-                <Send className="h-4 w-4" /> Send Message
+                <Send className="h-4 w-4" /> {status.type === "loading" ? "Sending..." : "Send Message"}
               </button>
             </div>
-            {sent && (
+            {status.type === "success" && (
               <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800 ring-1 ring-green-200">
-                Thanks! I’ll get back to you shortly.
+                {status.message}
+              </div>
+            )}
+            {status.type === "error" && (
+              <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800 ring-1 ring-red-200">
+                {status.message}
               </div>
             )}
           </form>
