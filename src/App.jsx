@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Stats from "./components/Stats";
 import Testimonials from "./components/Testimonials";
+import Contact from "./components/Contact";
 import ProtectedAdmin from "./components/ProtectedAdmin";
 
 function Footer() {
@@ -29,6 +30,7 @@ function LandingPage() {
         <Hero />
         <Stats />
         <Testimonials />
+        <Contact />
       </main>
       <Footer />
     </div>
